@@ -1,12 +1,19 @@
 package fetcher
 
-const (
-	urlPrefix  = ``
-	waitSecond = 1
+import (
+	"encoding/json"
+	"os"
 )
 
-// Fetch scrape target
-func Fetch() error {
+func FetchCardList(outputPath string, headless bool) (err error) {
+	var list []string
+	if list, err = GetCardList(headless); err != nil {
+		return err
+	}
 
-	return runChromedp(false)
+	raw, err := json.MarshalIndent(list, "", "\t")
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(outputPath, raw, 0664)
 }
